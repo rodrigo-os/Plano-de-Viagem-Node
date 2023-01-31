@@ -47,8 +47,22 @@ router.put("/travel", (request, response) =>{
                 ? response.status(404).json("O Identificador informado não foi encontrado!")
                 : database.update({_id}, {travel}, {}, (err) =>{
                     return err?console.log(err):response.status(201).json(travel);
-                })
-        })
+                });
+        });
+});
+
+// Delete
+router.delete("/travel/:_id", (request, response) =>{
+    const {_id} = request.params;
+    return !_id
+        ? response.status(400).json("Identificador não informado!")
+        : database.findOne({_id}, (err, doc) =>{
+            !doc
+                ? response.status(404).json("O Identificador informado não foi encontrado!")
+                : database.remove({_id}, {}, (err)=>{
+                    return err?console.log(err):response.status(200).send();
+                });
+        });
 });
 
 module.exports = router;
