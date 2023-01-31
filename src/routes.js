@@ -18,4 +18,11 @@ router.post("/travel", (request, response) =>{
     });
 });
 
+// Read
+router.get("/travel", (request, response) =>{
+    database.find({ }, (err, docs) =>{
+        return err?console.log(err):response.status(200).json(docs);
+    })
+})
+
 module.exports = router;
