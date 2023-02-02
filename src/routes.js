@@ -27,18 +27,18 @@ router.get("/travels", (request, response) =>{
 
 // Update
 router.put("/travel", (request, response) =>{
-    const _id = request.body._id;
+    const _id = request.body.travel._id;
     const travel = {
         from:{
-            city:request.body.from.city,
-            state:request.body.from.state,
+            city:request.body.travel.from.city,
+            state:request.body.travel.from.state,
         },
         to:{
-            city:request.body.to.city,
-            state:request.body.to.state,
+            city:request.body.travel.to.city,
+            state:request.body.travel.to.state,
         },
-        travel_duration:request.body.travel_duration,
-        travel_distance:request.body.travel_distance,
+        distance:request.body.travel.distance,
+        duration:request.body.travel.duration,
     };
     return !_id
         ? response.status(400).json("Identificador não informado!")
