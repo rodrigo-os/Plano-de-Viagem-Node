@@ -13,6 +13,8 @@ router.use(cors());
 // Create
 router.post("/travel", (request, response) =>{
     const travel = request.body;
+    travel.travel.distance = travel.travel.distance.split(" ",1)[0].split('.').join("");
+    travel.travel.distance = +(travel.travel.distance.split(",").join("."));
     database.insert(travel, (err)=>{
         return err?console.log(err):response.status(201).json(travel);
     });
@@ -20,7 +22,7 @@ router.post("/travel", (request, response) =>{
 
 // Read
 router.get("/travels", (request, response) =>{
-    database.find({ }, (err, docs) =>{
+    database.find({ }).sort({"travel.distance": 1}).exec(function (err, docs){
         return err?console.log(err):response.status(200).json(docs);
     });
 });
@@ -63,6 +65,20 @@ router.delete("/travel/:_id", (request, response) =>{
                     return err?console.log(err):response.status(200).send();
                 });
         });
+});
+
+// Search
+router.get("/travels/search/:params", (request, response) =>{
+    database.find({$or:[{"travel.from.city":{$in:[request.params.params]}},{"travel.to.city":{$in:[request.params.params]}}]}).sort({"travel.distance": 1}).exec(function (err, docs){
+        return err?console.log(err):response.status(200).json(docs);
+    });
+})
+
+// Order
+router.get("/travels/order/:params", (request, response) => {
+    database.find({ }).sort({"travel.distance": request.params.params == "Menor"?1:-1}).exec(function (err, docs){
+        return err?console.log(err):response.status(200).json(docs);
+    });
 });
 
 module.exports = router;
